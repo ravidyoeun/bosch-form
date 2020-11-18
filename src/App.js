@@ -13,9 +13,6 @@ import {
 } from "react-bootstrap";
 import ReCAPTCHA from "react-google-recaptcha";
 import Footer from "./components/Footer";
-function onChange(value) {
-  console.log("Captcha value:", value);
-}
 
 const App = (props) => {
   const [emailValue, setEmailValue] = useState("");
@@ -34,9 +31,17 @@ const App = (props) => {
   const [termsOfUse, setTermsOfUse] = useState(false);
   const [errors, setErrors] = useState([]);
   const [validated, setValidated] = useState(false);
+  const [notValidForm, setFormNotValid] = useState(true);
   const submitFormSubmission = async (event) => {
     event.preventDefault();
     console.log("submitting form values..", event);
+  };
+
+  const onChange = (value) => {
+    console.log("Captcha value:", value);
+    if (value) {
+      setValidated(true);
+    }
   };
 
   const emailChange = (event) => {
@@ -151,10 +156,12 @@ const App = (props) => {
     const form = event.currentTarget;
 
     if (form.checkValidity() === false) {
+      console.log("form not valid");
+      setFormNotValid(true);
       event.preventDefault();
       event.stopPropagation();
     }
-    setValidated(true);
+    //setValidated(true);
     var payloadObj = {
       promoIDExt: "3f94e6d0-018e-4d18-bc24-47c6097fa6a0",
       firstName: firstname,
@@ -493,6 +500,7 @@ const App = (props) => {
               type='submit'
               className='float-right'
               size='lg'
+              disabled={notValidForm}
             >
               Submit
             </Button>
