@@ -170,7 +170,7 @@ const App = (props) => {
     }
     setValidated(true);
     var payloadObj = {
-      promoIDExt: "3f94e6d0-018e-4d18-bc24-47c6097fa6a0",
+      promoIDExt: "10A129D3-F78B-4E1B-9C21-B65353B9E456",
       firstName: firstname,
       lastName: lastname,
       email: emailValue,
