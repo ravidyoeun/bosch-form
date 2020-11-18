@@ -41,6 +41,7 @@ const App = (props) => {
     console.log("Captcha value:", value);
     if (value) {
       setValidated(true);
+      setFormNotValid(false);
     }
   };
 
@@ -88,7 +89,11 @@ const App = (props) => {
 
   const stateChange = (event) => {
     console.log("stateChange", event.target.value);
-    setState(event.target.value);
+    if (event.target.value == "0") {
+      setState("");
+    } else {
+      setState(event.target.value);
+    }
   };
 
   const countryChange = (event) => {
@@ -160,8 +165,10 @@ const App = (props) => {
       setFormNotValid(true);
       event.preventDefault();
       event.stopPropagation();
+    } else {
+      setFormNotValid(false);
     }
-    //setValidated(true);
+    setValidated(true);
     var payloadObj = {
       promoIDExt: "3f94e6d0-018e-4d18-bc24-47c6097fa6a0",
       firstName: firstname,
