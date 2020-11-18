@@ -36,3 +36,19 @@
     transform: rotate(360deg);
   }
 }
+
+.navbarcolor {
+  color: #fff;
+  border: 0 solid #e6e6e6;
+  border-top-width: 1px;
+  border-bottom-width: 1px;
+  margin-bottom: 0;
+}
+
+.topnavbar {
+  left: 0;
+  height: 16px;
+  content: "";
+  background: url("./assets/images/shape_horizontal.svg") center center/cover
+    no-repeat;
+}
