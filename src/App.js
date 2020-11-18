@@ -485,7 +485,7 @@ const App = (props) => {
               </Form.Control.Feedback>
             </Form.Group>
             <ReCAPTCHA
-              sitekey='6LcwteMZAAAAAEA_56Qm-xK6YdRAwguymJSy_5E-'
+              sitekey='6LcbROQZAAAAAItQ23coy43o0mkrIHY3NjcX39L2'
               onChange={onChange}
             />
             <Button
