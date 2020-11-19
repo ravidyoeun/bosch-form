@@ -32,16 +32,16 @@ const App = (props) => {
   const [errors, setErrors] = useState([]);
   const [validated, setValidated] = useState(false);
   const [notValidForm, setFormNotValid] = useState(true);
+  const [captchaValue, setCaptchaValue] = useState("");
   const submitFormSubmission = async (event) => {
     event.preventDefault();
     console.log("submitting form values..", event);
   };
 
-  const onChange = (value) => {
+  const onCaptchaChange = (value) => {
     console.log("Captcha value:", value);
     if (value) {
-      setValidated(true);
-      setFormNotValid(false);
+      setCaptchaValue(value);
     }
   };
 
@@ -112,8 +112,9 @@ const App = (props) => {
   };
 
   const termsofUseChange = (event) => {
-    console.log("termsofUseChange", event.target.value);
-    setTermsOfUse(event.target.value);
+    console.log("termsofUseChange", event.target.checked);
+
+    setTermsOfUse(event.target.checked);
   };
 
   const hasError = (key) => {
@@ -161,24 +162,27 @@ const App = (props) => {
     const form = event.currentTarget;
 
     if (form.checkValidity() === false) {
-      console.log("form not valid");
-      setFormNotValid(true);
       event.preventDefault();
       event.stopPropagation();
     } else {
-      setFormNotValid(false);
+      if (captchaValue) {
+        event.preventDefault();
+        var payloadObj = {
+          promoIDExt: "10A129D3-F78B-4E1B-9C21-B65353B9E456",
+          firstName: firstname,
+          lastName: lastname,
+          email: emailValue,
+          zipCode: zipcode,
+        };
+
+        console.log("payloadObj", payloadObj);
+        await submitData(payloadObj);
+      } else {
+        alert("Security captcha is incorrect!");
+      }
     }
     setValidated(true);
-    var payloadObj = {
-      promoIDExt: "10A129D3-F78B-4E1B-9C21-B65353B9E456",
-      firstName: firstname,
-      lastName: lastname,
-      email: emailValue,
-      zipCode: zipcode,
-    };
 
-    console.log("payloadObj", payloadObj);
-    await submitData(payloadObj);
     // //VALIDATE
     // var errors = [];
 
@@ -203,6 +207,32 @@ const App = (props) => {
     // }
   };
 
+  const ShowCaptcha = (props) => {
+    console.log("props", props);
+    if (captchaValue) {
+      <ReCAPTCHA
+        sitekey='6LcbROQZAAAAAItQ23coy43o0mkrIHY3NjcX39L2'
+        onChange={onCaptchaChange}
+      />;
+    }
+    if (
+      props.firstName &&
+      props.lastName &&
+      props.email &&
+      props.zipCode &&
+      props.termsOfUse
+    ) {
+      return (
+        <ReCAPTCHA
+          sitekey='6LcbROQZAAAAAItQ23coy43o0mkrIHY3NjcX39L2'
+          onChange={onCaptchaChange}
+        />
+      );
+    } else {
+      return null;
+    }
+  };
+
   return (
     <>
       <Navbar expand='lg' className='topnavbar'></Navbar>
@@ -214,7 +244,9 @@ const App = (props) => {
           />{" "}
         </Navbar.Brand>
       </Navbar>
-      <Container style={{ paddingTop: "60px", minHeight: "2000px" }}>
+      <Container
+        style={{ paddingTop: "60px", minHeight: "2000px", padding: "50px" }}
+      >
         <Row>
           <h3>Please complete these fields.</h3>
         </Row>
@@ -238,7 +270,7 @@ const App = (props) => {
                 Please provide a valid email address.
               </Form.Control.Feedback>
             </Form.Group>
-            <Form.Group controlId='ConfirmEmail'>
+            {/* <Form.Group controlId='ConfirmEmail'>
               <Form.Label>Confirm Email Address *</Form.Label>
               <Form.Control
                 required
@@ -250,9 +282,8 @@ const App = (props) => {
               <Form.Control.Feedback type='invalid'>
                 Please confirm your email address.
               </Form.Control.Feedback>
-            </Form.Group>
-
-            <Form.Group controlId='Password'>
+            </Form.Group> */}
+            {/* <Form.Group controlId='Password'>
               <Form.Label>Password *</Form.Label>
               <Form.Control
                 type='password'
@@ -277,7 +308,7 @@ const App = (props) => {
               <Form.Control.Feedback type='invalid'>
                 Please confirm your password.
               </Form.Control.Feedback>
-            </Form.Group>
+            </Form.Group> */}
             <Form.Group controlId='FirstName'>
               <Form.Label>First Name *</Form.Label>
               <Form.Control
@@ -304,7 +335,7 @@ const App = (props) => {
                 Please provide your last name.
               </Form.Control.Feedback>
             </Form.Group>
-            <Form.Group controlId='StreetAddress'>
+            {/* <Form.Group controlId='StreetAddress'>
               <Form.Label>Street Address *</Form.Label>
               <Form.Control
                 type='text'
@@ -316,7 +347,7 @@ const App = (props) => {
               <Form.Control.Feedback type='invalid'>
                 Please provide street address.
               </Form.Control.Feedback>
-            </Form.Group>
+            </Form.Group> */}
             <Form.Group controlId='ZipCOde'>
               <Form.Label>Zip Code (5 digits) *</Form.Label>
               <Form.Control
@@ -330,7 +361,7 @@ const App = (props) => {
                 Please provide zip code.
               </Form.Control.Feedback>
             </Form.Group>
-            <Form.Group controlId='City'>
+            {/* <Form.Group controlId='City'>
               <Form.Label>City *</Form.Label>
               <Form.Control
                 type='text'
@@ -408,8 +439,8 @@ const App = (props) => {
               <Form.Control.Feedback type='invalid'>
                 Please select a state.
               </Form.Control.Feedback>
-            </Form.Group>
-            <Form.Group controlId='Country'>
+            </Form.Group> */}
+            {/* <Form.Group controlId='Country'>
               <Form.Label>Country</Form.Label>
               <Form.Control
                 placeholder='US'
@@ -452,7 +483,7 @@ const App = (props) => {
               <Form.Control.Feedback type='invalid'>
                 Please provide a valid mobile number.
               </Form.Control.Feedback>
-            </Form.Group>
+            </Form.Group> */}
             <Form.Group controlId='AgreeToTerms'>
               <Form.Check
                 type='checkbox'
@@ -492,22 +523,30 @@ const App = (props) => {
                 size='lg'
                 required
                 onChange={termsofUseChange}
-                value={termsOfUse}
+                checked={termsOfUse}
               />
               <Form.Control.Feedback type='invalid'>
                 Please agree to Terms of Use.
               </Form.Control.Feedback>
             </Form.Group>
+            {/* <ShowCaptcha
+              firstName={firstname}
+              lastName={lastname}
+              email={emailValue}
+              zipCode={zipcode}
+              termsOfUse={termsOfUse}
+            ></ShowCaptcha> */}
             <ReCAPTCHA
               sitekey='6LcbROQZAAAAAItQ23coy43o0mkrIHY3NjcX39L2'
-              onChange={onChange}
+              onChange={onCaptchaChange}
             />
+            <br />
+
             <Button
               variant='primary'
               type='submit'
               className='float-right'
               size='lg'
-              disabled={notValidForm}
             >
               Submit
             </Button>
