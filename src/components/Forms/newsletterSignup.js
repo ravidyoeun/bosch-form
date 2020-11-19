@@ -127,7 +127,7 @@ const NewsLetterSignup = (props) => {
           firstName: firstname,
           lastName: lastname,
           email: emailValue,
-          zipCode: zipcode,
+          zipCode: "",
         };
 
         console.log("payloadObj", payloadObj);
@@ -221,7 +221,7 @@ const NewsLetterSignup = (props) => {
               </Form.Control.Feedback>
             </Form.Group>
 
-            <Form.Group controlId='ZipCOde'>
+            {/* <Form.Group controlId='ZipCOde'>
               <Form.Label>Zip Code (5 digits) *</Form.Label>
               <Form.Control
                 type='number'
@@ -233,7 +233,7 @@ const NewsLetterSignup = (props) => {
               <Form.Control.Feedback type='invalid'>
                 Please provide zip code.
               </Form.Control.Feedback>
-            </Form.Group>
+            </Form.Group> */}
 
             <Form.Group controlId='AgreeToTerms'>
               <Form.Check

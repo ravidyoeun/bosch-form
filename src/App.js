@@ -170,7 +170,7 @@ const App = (props) => {
           firstName: firstname,
           lastName: lastname,
           email: emailValue,
-          zipCode: zipcode,
+          zipCode: "",
         };
 
         console.log("payloadObj", payloadObj);
