@@ -219,7 +219,7 @@ const App = (props) => {
 
   return (
     <>
-      <Navbar expand='lg' className='topnavbar'></Navbar>
+      {/* <Navbar expand='lg' className='topnavbar'></Navbar>
       <Navbar expand='lg' className='navbarcolor'>
         <Navbar.Brand href='https://www.bosch-home.com/' target='_blank'>
           <img
@@ -227,7 +227,7 @@ const App = (props) => {
             src='https://www.bosch-home.com/store/medias/sys_master/root/h72/h58/9828767989790/English-165px.jpg'
           />{" "}
         </Navbar.Brand>
-      </Navbar>
+      </Navbar> */}
       <Router>
         <div>
           {/* A <Switch> looks through its children <Route>s and
