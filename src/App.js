@@ -10,6 +10,7 @@ import NewsLetterSignup from "./components/Forms/newsletterSignup";
 import FormVersion2 from "./components/Forms/formVersion2";
 import SuccessPage from "./components/Success/success";
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
+import Confirmation from "./components/Confirmation/Confirmation";
 
 const App = (props) => {
   const [emailValue, setEmailValue] = useState("");
@@ -239,6 +240,9 @@ const App = (props) => {
             </Route>
             <Route path='/success'>
               <Success />
+            </Route>
+            <Route path='/confirmation'>
+              <Confirmation />
             </Route>
             <Route path='/'>
               <NewsLetterSignup></NewsLetterSignup>

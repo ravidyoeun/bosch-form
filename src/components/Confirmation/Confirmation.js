@@ -12,8 +12,16 @@ import {
 } from "react-bootstrap";
 import ReCAPTCHA from "react-google-recaptcha";
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
+import { useLocation } from "react-router-dom";
+const Confirmation = (props) => {
+  const location = useLocation();
 
-const Success = (props) => {
+  useEffect(() => {
+    console.log(location.pathname); // result: '/secondpage'
+    console.log(location.search); // result: '?query=abc'
+    console.log(location.state); // result: 'some_value'
+  }, [location]);
+
   const [emailValue, setEmailValue] = useState("");
 
   const [firstname, setFirstName] = useState("");
@@ -143,4 +151,4 @@ const Success = (props) => {
   );
 };
 
-export default Success;
+export default Confirmation;

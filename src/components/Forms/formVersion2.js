@@ -12,22 +12,30 @@ import {
   CardColumns,
 } from "react-bootstrap";
 import ReCAPTCHA from "react-google-recaptcha";
-import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
+
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Link,
+  useHistory,
+} from "react-router-dom";
 import Checkbox from "../Checkbox/Checkbox";
 import placeholder from "../../assets/images/download.svg";
 const FormVersion2 = (props) => {
+  const history = useHistory();
   const bg = require("../../assets/images/download.svg");
   const [emailValue, setEmailValue] = useState("");
 
   const [firstname, setFirstName] = useState("");
   const [lastname, setLastName] = useState("");
-  const [boxOneSelect, setBoxOneSelect] = useState(false);
-  const [boxTwoSelect, setBoxTwoSelect] = useState(false);
-  const [boxThreeSelect, setBoxThreeSelect] = useState(false);
-  const [boxFourSelect, setBoxFourSelect] = useState(false);
-  const [boxFiveSelect, setBoxFiveSelect] = useState(false);
-  const [boxSixSelect, setBoxSixSelect] = useState(false);
-
+  const [boxOneSelect, setBoxOneSelect] = useState(true);
+  const [boxTwoSelect, setBoxTwoSelect] = useState(true);
+  const [boxThreeSelect, setBoxThreeSelect] = useState(true);
+  const [boxFourSelect, setBoxFourSelect] = useState(true);
+  const [boxFiveSelect, setBoxFiveSelect] = useState(true);
+  const [boxSixSelect, setBoxSixSelect] = useState(true);
+  const [downloadLinks, setDownloadLinks] = useState([]);
   const [zipcode, setZipcode] = useState("");
 
   const [termsOfUse, setTermsOfUse] = useState(false);
@@ -105,6 +113,11 @@ const FormVersion2 = (props) => {
           if (result) {
             console.log("result returned", result);
             //redirect
+
+            history.push({
+              pathname: "/confirmation",
+              state: { links: downloadLinks },
+            });
           }
         },
 
@@ -113,27 +126,51 @@ const FormVersion2 = (props) => {
         }
       );
   };
+
   const selectCard = (param) => {
     console.log("card selected!", param);
     if (param == 1) {
       setBoxOneSelect(!boxOneSelect);
+      console.log("boxOneSelect", boxOneSelect);
+      if (boxOneSelect) {
+        console.log("downloadLinkObj.push");
+        setDownloadLinks(downloadLinks.concat("www.boxonelink.com"));
+      }
     }
     if (param == 2) {
       setBoxTwoSelect(!boxTwoSelect);
+      if (boxTwoSelect) {
+        setDownloadLinks(downloadLinks.concat("www.boxtwo.com"));
+      }
     }
     if (param == 3) {
       setBoxThreeSelect(!boxThreeSelect);
+      if (boxThreeSelect) {
+        setDownloadLinks(downloadLinks.concat("www.boxThreeSelect.com"));
+      }
     }
     if (param == 4) {
       setBoxFourSelect(!boxFourSelect);
+      if (boxFourSelect) {
+        setDownloadLinks(downloadLinks.concat("www.boxThreeSelect.com"));
+      }
     }
     if (param == 5) {
       setBoxFiveSelect(!boxFiveSelect);
+      if (boxFiveSelect) {
+        setDownloadLinks(downloadLinks.concat("www.boxThreeSelect.com"));
+      }
     }
     if (param == 6) {
       setBoxSixSelect(!boxSixSelect);
+      if (boxSixSelect) {
+        setDownloadLinks(downloadLinks.concat("www.boxThreeSelect.com"));
+      }
     }
+    console.log("downloadLinks", downloadLinks);
+    // setDownloadLinks(downloadLinkObj);
   };
+
   const handleSubmit = async (event) => {
     event.preventDefault();
     const form = event.currentTarget;
@@ -230,7 +267,108 @@ const FormVersion2 = (props) => {
                 Please provide zip code.
               </Form.Control.Feedback>
             </Form.Group>
-
+            <p>
+              Select your favorite kitchen suite(s) below to access your
+              downloadable copy: *
+            </p>
+            <CardColumns>
+              <a style={{ cursor: "pointer" }} onClick={() => selectCard(1)}>
+                <Card
+                  bg='secondary'
+                  text='white'
+                  className={`${
+                    !boxOneSelect
+                      ? "highlightSelection text-center p-3"
+                      : "text-center p-3"
+                  }`}
+                >
+                  <blockquote className='blockquote mb-0 card-body'>
+                    <p>Kitchen Suite 1</p>
+                  </blockquote>
+                </Card>
+              </a>
+              <a style={{ cursor: "pointer" }} onClick={() => selectCard(2)}>
+                <Card
+                  bg='secondary'
+                  text='white'
+                  className={`${
+                    !boxTwoSelect
+                      ? "highlightSelection text-center p-3"
+                      : "text-center p-3"
+                  }`}
+                >
+                  <blockquote className='blockquote mb-0 card-body'>
+                    <p>Kitchen Suite 2</p>
+                  </blockquote>
+                </Card>
+              </a>
+              <a style={{ cursor: "pointer" }} onClick={() => selectCard(3)}>
+                <Card
+                  bg='secondary'
+                  text='white'
+                  className={`${
+                    !boxThreeSelect
+                      ? "highlightSelection text-center p-3"
+                      : "text-center p-3"
+                  }`}
+                >
+                  <blockquote className='blockquote mb-0 card-body'>
+                    <p>Kitchen Suite 3</p>
+                  </blockquote>
+                </Card>
+              </a>
+              <a style={{ cursor: "pointer" }} onClick={() => selectCard(4)}>
+                <Card
+                  bg='secondary'
+                  text='white'
+                  className={`${
+                    !boxFourSelect
+                      ? "highlightSelection text-center p-3"
+                      : "text-center p-3"
+                  }`}
+                >
+                  <blockquote className='blockquote mb-0 card-body'>
+                    <p>Kitchen Suite 4</p>
+                  </blockquote>
+                </Card>
+              </a>
+              <a style={{ cursor: "pointer" }} onClick={() => selectCard(5)}>
+                <Card
+                  bg='secondary'
+                  text='white'
+                  className={`${
+                    !boxFiveSelect
+                      ? "highlightSelection text-center p-3"
+                      : "text-center p-3"
+                  }`}
+                >
+                  <blockquote className='blockquote mb-0 card-body'>
+                    <p>Kitchen Suite 5</p>
+                  </blockquote>
+                </Card>
+              </a>
+              <a style={{ cursor: "pointer" }} onClick={() => selectCard(6)}>
+                <Card
+                  bg='secondary'
+                  text='white'
+                  className={`${
+                    !boxSixSelect
+                      ? "highlightSelection text-center p-3"
+                      : "text-center p-3"
+                  }`}
+                >
+                  <blockquote className='blockquote mb-0 card-body'>
+                    <p>Kitchen Suite 6</p>
+                  </blockquote>
+                </Card>
+              </a>
+            </CardColumns>
+            <br></br>
+            <ReCAPTCHA
+              sitekey='6LcbROQZAAAAAItQ23coy43o0mkrIHY3NjcX39L2'
+              onChange={onCaptchaChange}
+            />
+            <br />
             <Form.Group controlId='AgreeToTerms'>
               <Form.Check
                 type='checkbox'
@@ -276,106 +414,7 @@ const FormVersion2 = (props) => {
                 Please agree to Terms of Use.
               </Form.Control.Feedback>
             </Form.Group>
-
-            <CardColumns>
-              <a style={{ cursor: "pointer" }} onClick={() => selectCard(1)}>
-                <Card
-                  bg='secondary'
-                  text='white'
-                  className={`${
-                    boxOneSelect
-                      ? "highlightSelection text-center p-3"
-                      : "text-center p-3"
-                  }`}
-                >
-                  <blockquote className='blockquote mb-0 card-body'>
-                    <p>Option 1</p>
-                  </blockquote>
-                </Card>
-              </a>
-              <a style={{ cursor: "pointer" }} onClick={() => selectCard(2)}>
-                <Card
-                  bg='secondary'
-                  text='white'
-                  className={`${
-                    boxTwoSelect
-                      ? "highlightSelection text-center p-3"
-                      : "text-center p-3"
-                  }`}
-                >
-                  <blockquote className='blockquote mb-0 card-body'>
-                    <p>Option 2</p>
-                  </blockquote>
-                </Card>
-              </a>
-              <a style={{ cursor: "pointer" }} onClick={() => selectCard(3)}>
-                <Card
-                  bg='secondary'
-                  text='white'
-                  className={`${
-                    boxThreeSelect
-                      ? "highlightSelection text-center p-3"
-                      : "text-center p-3"
-                  }`}
-                >
-                  <blockquote className='blockquote mb-0 card-body'>
-                    <p>Option 3</p>
-                  </blockquote>
-                </Card>
-              </a>
-              <a style={{ cursor: "pointer" }} onClick={() => selectCard(4)}>
-                <Card
-                  bg='secondary'
-                  text='white'
-                  className={`${
-                    boxFourSelect
-                      ? "highlightSelection text-center p-3"
-                      : "text-center p-3"
-                  }`}
-                >
-                  <blockquote className='blockquote mb-0 card-body'>
-                    <p>Option 4</p>
-                  </blockquote>
-                </Card>
-              </a>
-              <a style={{ cursor: "pointer" }} onClick={() => selectCard(5)}>
-                <Card
-                  bg='secondary'
-                  text='white'
-                  className={`${
-                    boxFiveSelect
-                      ? "highlightSelection text-center p-3"
-                      : "text-center p-3"
-                  }`}
-                >
-                  <blockquote className='blockquote mb-0 card-body'>
-                    <p>Option 5</p>
-                  </blockquote>
-                </Card>
-              </a>
-              <a style={{ cursor: "pointer" }} onClick={() => selectCard(6)}>
-                <Card
-                  bg='secondary'
-                  text='white'
-                  className={`${
-                    boxSixSelect
-                      ? "highlightSelection text-center p-3"
-                      : "text-center p-3"
-                  }`}
-                >
-                  <blockquote className='blockquote mb-0 card-body'>
-                    <p>Option 6</p>
-                  </blockquote>
-                </Card>
-              </a>
-            </CardColumns>
             <br></br>
-            <ReCAPTCHA
-              sitekey='6LcbROQZAAAAAItQ23coy43o0mkrIHY3NjcX39L2'
-              onChange={onCaptchaChange}
-            />
-            <br />
-
             <Button
               variant='primary'
               type='submit'
