@@ -8,15 +8,25 @@ import {
   Form,
   Button,
   InputGroup,
+  Card,
+  CardColumns,
 } from "react-bootstrap";
 import ReCAPTCHA from "react-google-recaptcha";
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
-
+import Checkbox from "../Checkbox/Checkbox";
+import placeholder from "../../assets/images/download.svg";
 const FormVersion2 = (props) => {
+  const bg = require("../../assets/images/download.svg");
   const [emailValue, setEmailValue] = useState("");
 
   const [firstname, setFirstName] = useState("");
   const [lastname, setLastName] = useState("");
+  const [boxOneSelect, setBoxOneSelect] = useState(false);
+  const [boxTwoSelect, setBoxTwoSelect] = useState(false);
+  const [boxThreeSelect, setBoxThreeSelect] = useState(false);
+  const [boxFourSelect, setBoxFourSelect] = useState(false);
+  const [boxFiveSelect, setBoxFiveSelect] = useState(false);
+  const [boxSixSelect, setBoxSixSelect] = useState(false);
 
   const [zipcode, setZipcode] = useState("");
 
@@ -103,7 +113,27 @@ const FormVersion2 = (props) => {
         }
       );
   };
-
+  const selectCard = (param) => {
+    console.log("card selected!", param);
+    if (param == 1) {
+      setBoxOneSelect(!boxOneSelect);
+    }
+    if (param == 2) {
+      setBoxTwoSelect(!boxTwoSelect);
+    }
+    if (param == 3) {
+      setBoxThreeSelect(!boxThreeSelect);
+    }
+    if (param == 4) {
+      setBoxFourSelect(!boxFourSelect);
+    }
+    if (param == 5) {
+      setBoxFiveSelect(!boxFiveSelect);
+    }
+    if (param == 6) {
+      setBoxSixSelect(!boxSixSelect);
+    }
+  };
   const handleSubmit = async (event) => {
     event.preventDefault();
     const form = event.currentTarget;
@@ -130,32 +160,6 @@ const FormVersion2 = (props) => {
     }
     setValidated(true);
   };
-
-  // const ShowCaptcha = (props) => {
-  //   console.log("props", props);
-  //   if (captchaValue) {
-  //     <ReCAPTCHA
-  //       sitekey='6LcbROQZAAAAAItQ23coy43o0mkrIHY3NjcX39L2'
-  //       onChange={onCaptchaChange}
-  //     />;
-  //   }
-  //   if (
-  //     props.firstName &&
-  //     props.lastName &&
-  //     props.email &&
-  //     props.zipCode &&
-  //     props.termsOfUse
-  //   ) {
-  //     return (
-  //       <ReCAPTCHA
-  //         sitekey='6LcbROQZAAAAAItQ23coy43o0mkrIHY3NjcX39L2'
-  //         onChange={onCaptchaChange}
-  //       />
-  //     );
-  //   } else {
-  //     return null;
-  //   }
-  // };
 
   return (
     <>
@@ -243,7 +247,7 @@ const FormVersion2 = (props) => {
                         fontWeight: "600",
                       }}
                     >
-                      <bold>Terms of Use</bold>
+                      Terms of Use
                     </a>{" "}
                     and{" "}
                     <a
@@ -256,7 +260,7 @@ const FormVersion2 = (props) => {
                         fontWeight: "600",
                       }}
                     >
-                      <bold>Privacy Policy</bold>
+                      Privacy Policy
                     </a>{" "}
                     of BSH Home Appliances Corporation - Bosch, 1901 Main
                     Street, Suite 600, Irvine, CA 92614. I understand and accept
@@ -273,6 +277,99 @@ const FormVersion2 = (props) => {
               </Form.Control.Feedback>
             </Form.Group>
 
+            <CardColumns>
+              <a style={{ cursor: "pointer" }} onClick={() => selectCard(1)}>
+                <Card
+                  bg='secondary'
+                  text='white'
+                  className={`${
+                    boxOneSelect
+                      ? "highlightSelection text-center p-3"
+                      : "text-center p-3"
+                  }`}
+                >
+                  <blockquote className='blockquote mb-0 card-body'>
+                    <p>Option 1</p>
+                  </blockquote>
+                </Card>
+              </a>
+              <a style={{ cursor: "pointer" }} onClick={() => selectCard(2)}>
+                <Card
+                  bg='secondary'
+                  text='white'
+                  className={`${
+                    boxTwoSelect
+                      ? "highlightSelection text-center p-3"
+                      : "text-center p-3"
+                  }`}
+                >
+                  <blockquote className='blockquote mb-0 card-body'>
+                    <p>Option 2</p>
+                  </blockquote>
+                </Card>
+              </a>
+              <a style={{ cursor: "pointer" }} onClick={() => selectCard(3)}>
+                <Card
+                  bg='secondary'
+                  text='white'
+                  className={`${
+                    boxThreeSelect
+                      ? "highlightSelection text-center p-3"
+                      : "text-center p-3"
+                  }`}
+                >
+                  <blockquote className='blockquote mb-0 card-body'>
+                    <p>Option 3</p>
+                  </blockquote>
+                </Card>
+              </a>
+              <a style={{ cursor: "pointer" }} onClick={() => selectCard(4)}>
+                <Card
+                  bg='secondary'
+                  text='white'
+                  className={`${
+                    boxFourSelect
+                      ? "highlightSelection text-center p-3"
+                      : "text-center p-3"
+                  }`}
+                >
+                  <blockquote className='blockquote mb-0 card-body'>
+                    <p>Option 4</p>
+                  </blockquote>
+                </Card>
+              </a>
+              <a style={{ cursor: "pointer" }} onClick={() => selectCard(5)}>
+                <Card
+                  bg='secondary'
+                  text='white'
+                  className={`${
+                    boxFiveSelect
+                      ? "highlightSelection text-center p-3"
+                      : "text-center p-3"
+                  }`}
+                >
+                  <blockquote className='blockquote mb-0 card-body'>
+                    <p>Option 5</p>
+                  </blockquote>
+                </Card>
+              </a>
+              <a style={{ cursor: "pointer" }} onClick={() => selectCard(6)}>
+                <Card
+                  bg='secondary'
+                  text='white'
+                  className={`${
+                    boxSixSelect
+                      ? "highlightSelection text-center p-3"
+                      : "text-center p-3"
+                  }`}
+                >
+                  <blockquote className='blockquote mb-0 card-body'>
+                    <p>Option 6</p>
+                  </blockquote>
+                </Card>
+              </a>
+            </CardColumns>
+            <br></br>
             <ReCAPTCHA
               sitekey='6LcbROQZAAAAAItQ23coy43o0mkrIHY3NjcX39L2'
               onChange={onCaptchaChange}
