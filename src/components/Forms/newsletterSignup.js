@@ -139,32 +139,6 @@ const NewsLetterSignup = (props) => {
     setValidated(true);
   };
 
-  const ShowCaptcha = (props) => {
-    console.log("props", props);
-    if (captchaValue) {
-      <ReCAPTCHA
-        sitekey='6LcbROQZAAAAAItQ23coy43o0mkrIHY3NjcX39L2'
-        onChange={onCaptchaChange}
-      />;
-    }
-    if (
-      props.firstName &&
-      props.lastName &&
-      props.email &&
-      props.zipCode &&
-      props.termsOfUse
-    ) {
-      return (
-        <ReCAPTCHA
-          sitekey='6LcbROQZAAAAAItQ23coy43o0mkrIHY3NjcX39L2'
-          onChange={onCaptchaChange}
-        />
-      );
-    } else {
-      return null;
-    }
-  };
-
   return (
     <>
       <Container

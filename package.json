@@ -3,19 +3,17 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@testing-library/jest-dom": "^5.11.6",
-    "@testing-library/react": "^11.1.2",
-    "@testing-library/user-event": "^12.2.2",
+    "babel-polyfill": "^6.26.0",
     "bootstrap": "^4.5.3",
+    "core-js": "^3.7.0",
     "formik": "^2.2.5",
     "react": "^17.0.1",
-    "react-app-polyfill": "^2.0.0",
+    "react-app-polyfill": "^1.0.2",
     "react-bootstrap": "^1.4.0",
-    "react-dom": "^17.0.1",
+    "react-dom": "^16.9.0",
     "react-google-recaptcha": "^2.1.0",
     "react-router-dom": "^5.2.0",
-    "react-scripts": "4.0.0",
-    "web-vitals": "^0.2.4"
+    "react-scripts": "3.1.1"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -39,8 +37,7 @@
       "last 1 chrome version",
       "last 1 firefox version",
       "last 1 safari version",
-      "ie 11",
-      "not dead"
+      "ie 11"
     ]
   }
 }
