@@ -131,9 +131,8 @@ const FormVersion2 = (props) => {
     console.log("card selected!", param);
     if (param == 1) {
       setBoxOneSelect(!boxOneSelect);
-      console.log("boxOneSelect", boxOneSelect);
+
       if (boxOneSelect) {
-        console.log("downloadLinkObj.push");
         setDownloadLinks(downloadLinks.concat("www.boxonelink.com"));
       }
     }
