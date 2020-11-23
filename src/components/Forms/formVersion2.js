@@ -128,46 +128,66 @@ const FormVersion2 = (props) => {
   };
 
   const selectCard = (param) => {
-    console.log("card selected!", param);
     if (param == 1) {
       setBoxOneSelect(!boxOneSelect);
 
       if (boxOneSelect) {
-        setDownloadLinks(downloadLinks.concat("www.boxonelink.com"));
+        setDownloadLinks(downloadLinks.concat(1));
+      } else {
+        removeItem(1);
       }
     }
     if (param == 2) {
       setBoxTwoSelect(!boxTwoSelect);
       if (boxTwoSelect) {
-        setDownloadLinks(downloadLinks.concat("www.boxtwo.com"));
+        setDownloadLinks(downloadLinks.concat(2));
+      } else {
+        removeItem(2);
       }
     }
     if (param == 3) {
       setBoxThreeSelect(!boxThreeSelect);
       if (boxThreeSelect) {
-        setDownloadLinks(downloadLinks.concat("www.boxThreeSelect.com"));
+        setDownloadLinks(downloadLinks.concat(3));
+      } else {
+        removeItem(3);
       }
     }
     if (param == 4) {
       setBoxFourSelect(!boxFourSelect);
       if (boxFourSelect) {
-        setDownloadLinks(downloadLinks.concat("www.boxThreeSelect.com"));
+        setDownloadLinks(downloadLinks.concat(4));
+      } else {
+        removeItem(4);
       }
     }
     if (param == 5) {
       setBoxFiveSelect(!boxFiveSelect);
       if (boxFiveSelect) {
-        setDownloadLinks(downloadLinks.concat("www.boxThreeSelect.com"));
+        setDownloadLinks(downloadLinks.concat(5));
+      } else {
+        removeItem(5);
       }
     }
     if (param == 6) {
       setBoxSixSelect(!boxSixSelect);
       if (boxSixSelect) {
-        setDownloadLinks(downloadLinks.concat("www.boxThreeSelect.com"));
+        setDownloadLinks(downloadLinks.concat(6));
+      } else {
+        removeItem(6);
       }
     }
     console.log("downloadLinks", downloadLinks);
     // setDownloadLinks(downloadLinkObj);
+  };
+
+  const removeItem = (e) => {
+    var array = [...downloadLinks];
+    var index = array.indexOf(e);
+    if (index !== -1) {
+      array.splice(index, 1);
+      setDownloadLinks(array);
+    }
   };
 
   const handleSubmit = async (event) => {
@@ -417,7 +437,7 @@ const FormVersion2 = (props) => {
             <Button
               variant='primary'
               type='submit'
-              className='float-right'
+              className='float-left'
               size='lg'
             >
               Submit

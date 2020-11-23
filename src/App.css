@@ -56,3 +56,23 @@
 .highlightSelection {
   border: 3px solid #0055e4;
 }
+
+.form-control {
+  border-radius: 0;
+}
+
+.form-control-lg {
+  border-radius: 0;
+}
+
+.card {
+  border-radius: 0;
+}
+
+.btn {
+  border-radius: 0;
+}
+
+.btn-lg {
+  border-radius: 0;
+}

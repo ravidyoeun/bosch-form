@@ -264,7 +264,7 @@ const NewsLetterSignup = (props) => {
             <Button
               variant='primary'
               type='submit'
-              className='float-right'
+              className='float-left'
               size='lg'
             >
               Submit
