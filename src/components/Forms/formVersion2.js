@@ -282,6 +282,7 @@ const FormVersion2 = (props) => {
                 onChange={zipChange}
                 value={zipcode}
                 isInvalid={zipcode.length != 5}
+                isValid={false}
               />
               <Form.Control.Feedback type='invalid'>
                 Please provide a valid US zip code that is 5 digits long.
