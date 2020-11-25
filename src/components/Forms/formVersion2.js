@@ -1,11 +1,15 @@
-import "bootstrap/dist/css/bootstrap.min.css";
-import React, { useRef, useEffect, useState } from "react";
+// import "bootstrap/dist/css/bootstrap.min.css";
+
+import React, { useRef, useEffect, useState, Component } from "react";
+import * as ReactDOM from "react-dom";
+import { Form, Field, FormElement } from "@progress/kendo-react-form";
+import { Error } from "@progress/kendo-react-labels";
+import { Input } from "@progress/kendo-react-inputs";
 import {
   Navbar,
   Container,
   Row,
   Col,
-  Form,
   Button,
   InputGroup,
   Card,
@@ -22,6 +26,7 @@ import {
 } from "react-router-dom";
 import Checkbox from "../Checkbox/Checkbox";
 import placeholder from "../../assets/images/download.svg";
+
 const FormVersion2 = (props) => {
   const history = useHistory();
   const bg = require("../../assets/images/download.svg");
@@ -35,6 +40,7 @@ const FormVersion2 = (props) => {
   const [boxFourSelect, setBoxFourSelect] = useState(true);
   const [boxFiveSelect, setBoxFiveSelect] = useState(true);
   const [boxSixSelect, setBoxSixSelect] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const [downloadLinks, setDownloadLinks] = useState([]);
   const [zipcode, setZipcode] = useState("");
 
@@ -48,6 +54,75 @@ const FormVersion2 = (props) => {
     console.log("submitting form values..", event);
   };
 
+  const emailRegex = new RegExp(/\S+@\S+\.\S+/);
+  const emailValidator = (value) =>
+    emailRegex.test(value) ? "" : "Please enter a valid email.";
+  const zipCodeValidator = (value) =>
+    zipCodeTest(value) ? "" : "Please enter a valid 5 digit zip code.";
+
+  const zipCodeTest = (value) => {
+    console.log("zipCodeTest", value);
+    if (value == undefined) {
+      return false;
+    }
+    if (value.length != 5) {
+      return false;
+    } else {
+      return true;
+    }
+  };
+  const firstNameValidator = (value) =>
+    nameTest(value) ? "" : "Please enter your first name.";
+  const lastNameValidator = (value) =>
+    nameTest(value) ? "" : "Please enter your last name.";
+  const nameTest = (value) => {
+    if (value) {
+      return true;
+    } else {
+      return false;
+    }
+  };
+  const EmailInput = (fieldRenderProps) => {
+    const { validationMessage, visited, ...others } = fieldRenderProps;
+    return (
+      <div>
+        <Input {...others} />
+        {visited && validationMessage && <Error>{validationMessage}</Error>}
+      </div>
+    );
+  };
+
+  const firstNameInput = (fieldRenderProps) => {
+    const { validationMessage, visited, ...others } = fieldRenderProps;
+    return (
+      <div>
+        <Input {...others} />
+        {visited && validationMessage && <Error>{validationMessage}</Error>}
+      </div>
+    );
+  };
+
+  const lastNameInput = (fieldRenderProps) => {
+    const { validationMessage, visited, ...others } = fieldRenderProps;
+    return (
+      <div>
+        <Input {...others} />
+        {visited && validationMessage && <Error>{validationMessage}</Error>}
+      </div>
+    );
+  };
+
+  const ZipCodeInput = (fieldRenderProps) => {
+    const { validationMessage, visited, ...others } = fieldRenderProps;
+    console.log("fieldRenderProps", fieldRenderProps);
+
+    return (
+      <div>
+        <Input {...others} />
+        {visited && validationMessage && <Error>{validationMessage}</Error>}
+      </div>
+    );
+  };
   const onCaptchaChange = (value) => {
     console.log("Captcha value:", value);
     if (value) {
@@ -190,32 +265,249 @@ const FormVersion2 = (props) => {
     }
   };
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-    const form = event.currentTarget;
+  // const handleSubmit = async (event) => {
+  //   event.preventDefault();
+  //   const form = event.currentTarget;
 
-    if (form.checkValidity() === false) {
-      event.preventDefault();
-      event.stopPropagation();
+  //   if (form.checkValidity() === false) {
+  //     event.preventDefault();
+  //     event.stopPropagation();
+  //   } else {
+  //     if (captchaValue) {
+  //       event.preventDefault();
+  //       var payloadObj = {
+  //         promoIDExt: "10A129D3-F78B-4E1B-9C21-B65353B9E456",
+  //         firstName: firstname,
+  //         lastName: lastname,
+  //         email: emailValue,
+  //         zipCode: zipcode,
+  //       };
+
+  //       console.log("payloadObj", payloadObj);
+  //       await submitData(payloadObj);
+  //     } else {
+  //       alert("Security captcha is incorrect!");
+  //     }
+  //   }
+  //   setValidated(true);
+  // };
+  const handleSubmit = async (dataItem) => {
+    console.log("dataItem", dataItem);
+    if (captchaValue) {
+      setIsLoading(true);
+      var payloadObj = {
+        promoIDExt: "10A129D3-F78B-4E1B-9C21-B65353B9E456",
+        firstName: dataItem.firstName,
+        lastName: dataItem.lastName,
+        email: dataItem.email,
+        zipCode: dataItem.zipcode,
+      };
+
+      await submitData(payloadObj);
     } else {
-      if (captchaValue) {
-        event.preventDefault();
-        var payloadObj = {
-          promoIDExt: "10A129D3-F78B-4E1B-9C21-B65353B9E456",
-          firstName: firstname,
-          lastName: lastname,
-          email: emailValue,
-          zipCode: zipcode,
-        };
-
-        console.log("payloadObj", payloadObj);
-        await submitData(payloadObj);
-      } else {
-        alert("Security captcha is incorrect!");
-      }
+      alert("Security captcha is incorrect!");
     }
-    setValidated(true);
+
+    setIsLoading(false);
   };
+
+  const ShowLoadText = () => {
+    if (isLoading) {
+      return "Loading...";
+    } else {
+      return "Submit";
+    }
+  };
+  return (
+    <>
+      <Container
+        style={{ paddingTop: "60px", minHeight: "2000px", padding: "50px" }}
+      >
+        <Row style={{ minWidth: "100%" }}>
+          <Form
+            style={{ minWidth: "100% !important" }}
+            onSubmit={handleSubmit}
+            render={(formRenderProps) => (
+              <FormElement horizontal={true}>
+                <fieldset className={"k-form-fieldset"}>
+                  <legend className={"k-form-legend"}>
+                    Please fill in the fields:
+                  </legend>
+                  <div className='mb-3'>
+                    <Field
+                      name={"email"}
+                      type={"email"}
+                      component={EmailInput}
+                      label={"Email *"}
+                      validator={emailValidator}
+                    />
+                  </div>
+                  <div className='mb-3'>
+                    <Field
+                      name={"firstName"}
+                      component={firstNameInput}
+                      label={"First Name *"}
+                      validator={firstNameValidator}
+                    />
+                  </div>
+
+                  <div className='mb-3'>
+                    <Field
+                      name={"lastName"}
+                      component={lastNameInput}
+                      label={"Last Name *"}
+                      validator={lastNameValidator}
+                    />
+                  </div>
+
+                  <div className='mb-3'>
+                    <Field
+                      name={"zipcode"}
+                      type={"zipcode"}
+                      component={ZipCodeInput}
+                      label={"Zip Code (5 digits) *"}
+                      validator={zipCodeValidator}
+                    />
+                  </div>
+                </fieldset>
+                <br />
+                <p>
+                  Select your favorite kitchen suite(s) below to access your
+                  downloadable copy: *
+                </p>
+                <CardColumns>
+                  <a
+                    style={{ cursor: "pointer" }}
+                    onClick={() => selectCard(1)}
+                  >
+                    <Card
+                      bg='secondary'
+                      text='white'
+                      className={`${
+                        !boxOneSelect
+                          ? "highlightSelection text-center p-3"
+                          : "text-center p-3"
+                      }`}
+                    >
+                      <blockquote className='blockquote mb-0 card-body'>
+                        <p>Kitchen Suite 1</p>
+                      </blockquote>
+                    </Card>
+                  </a>
+                  <a
+                    style={{ cursor: "pointer" }}
+                    onClick={() => selectCard(2)}
+                  >
+                    <Card
+                      bg='secondary'
+                      text='white'
+                      className={`${
+                        !boxTwoSelect
+                          ? "highlightSelection text-center p-3"
+                          : "text-center p-3"
+                      }`}
+                    >
+                      <blockquote className='blockquote mb-0 card-body'>
+                        <p>Kitchen Suite 2</p>
+                      </blockquote>
+                    </Card>
+                  </a>
+                  <a
+                    style={{ cursor: "pointer" }}
+                    onClick={() => selectCard(3)}
+                  >
+                    <Card
+                      bg='secondary'
+                      text='white'
+                      className={`${
+                        !boxThreeSelect
+                          ? "highlightSelection text-center p-3"
+                          : "text-center p-3"
+                      }`}
+                    >
+                      <blockquote className='blockquote mb-0 card-body'>
+                        <p>Kitchen Suite 3</p>
+                      </blockquote>
+                    </Card>
+                  </a>
+                  <a
+                    style={{ cursor: "pointer" }}
+                    onClick={() => selectCard(4)}
+                  >
+                    <Card
+                      bg='secondary'
+                      text='white'
+                      className={`${
+                        !boxFourSelect
+                          ? "highlightSelection text-center p-3"
+                          : "text-center p-3"
+                      }`}
+                    >
+                      <blockquote className='blockquote mb-0 card-body'>
+                        <p>Kitchen Suite 4</p>
+                      </blockquote>
+                    </Card>
+                  </a>
+                  <a
+                    style={{ cursor: "pointer" }}
+                    onClick={() => selectCard(5)}
+                  >
+                    <Card
+                      bg='secondary'
+                      text='white'
+                      className={`${
+                        !boxFiveSelect
+                          ? "highlightSelection text-center p-3"
+                          : "text-center p-3"
+                      }`}
+                    >
+                      <blockquote className='blockquote mb-0 card-body'>
+                        <p>Kitchen Suite 5</p>
+                      </blockquote>
+                    </Card>
+                  </a>
+                  <a
+                    style={{ cursor: "pointer" }}
+                    onClick={() => selectCard(6)}
+                  >
+                    <Card
+                      bg='secondary'
+                      text='white'
+                      className={`${
+                        !boxSixSelect
+                          ? "highlightSelection text-center p-3"
+                          : "text-center p-3"
+                      }`}
+                    >
+                      <blockquote className='blockquote mb-0 card-body'>
+                        <p>Kitchen Suite 6</p>
+                      </blockquote>
+                    </Card>
+                  </a>
+                </CardColumns>
+                <br />
+                <ReCAPTCHA
+                  sitekey='6LcbROQZAAAAAItQ23coy43o0mkrIHY3NjcX39L2'
+                  onChange={onCaptchaChange}
+                />
+                <br />
+                <div className='k-form-buttons'>
+                  <button
+                    primary={true}
+                    type={"submit"}
+                    disabled={!formRenderProps.allowSubmit}
+                    className='k-button'
+                  >
+                    <ShowLoadText></ShowLoadText>
+                  </button>
+                </div>
+              </FormElement>
+            )}
+          />
+        </Row>
+      </Container>
+    </>
+  );
 
   return (
     <>
@@ -225,6 +517,7 @@ const FormVersion2 = (props) => {
         <Row>
           <h3>Form Version 2</h3>
         </Row>
+
         <Row>
           <Form
             noValidate

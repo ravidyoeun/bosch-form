@@ -1,8 +1,9 @@
+import "./bosch-theme-custom.scss";
 import "bootstrap/dist/css/bootstrap.min.css";
 import logo from "./logo.svg";
-
+//import "@progress/kendo-theme-default/dist/all.css";
 import "./App.css";
-import React, { useRef, useEffect, useState } from "react";
+import React, { useRef, useEffect, useState, Component } from "react";
 import { Navbar } from "react-bootstrap";
 import ReCAPTCHA from "react-google-recaptcha";
 

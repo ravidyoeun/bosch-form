@@ -57,22 +57,39 @@
   border: 3px solid #0055e4;
 }
 
-.form-control {
-  border-radius: 0;
+.k-form .k-form-horizontal {
+  width: 100%;
 }
 
-.form-control-lg {
-  border-radius: 0;
+#root > div > div > div > form {
+  width: 100%;
 }
 
-.card {
-  border-radius: 0;
+.k-button {
+  border-color: #00639a;
+  color: #fff;
+  background-color: #00639a;
+  border-bottom: 2px solid #009bd9;
+  border: 1px solid #e6e6e6;
+  width: auto;
+  position: relative;
+  height: 48px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+  border-radius: 0%;
 }
 
-.btn {
-  border-radius: 0;
+.k-textbox {
+  border-radius: 0%;
 }
 
-.btn-lg {
-  border-radius: 0;
+.k-button:hover,
+.k-button.k-state-hover {
+  border-color: #00639a;
+  color: #00639a;
+  background-color: #00639a;
+  color: #fff;
+  border-radius: 0%;
 }
