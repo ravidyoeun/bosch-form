@@ -15,7 +15,6 @@
     "@progress/kendo-react-inputs": "^4.1.0",
     "@progress/kendo-react-intl": "^4.1.0",
     "@progress/kendo-theme-bootstrap": "^4.24.0",
-    "@progress/kendo-theme-default": "^4.26.0",
     "babel-polyfill": "^6.26.0",
     "bootstrap": "^4.5.3",
     "core-js": "^3.7.0",
