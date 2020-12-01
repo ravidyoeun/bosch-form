@@ -364,10 +364,6 @@ const FormVersion2 = (props) => {
         style={{ paddingTop: "60px", minHeight: "2000px", padding: "50px" }}
       >
         <Row>
-          <h3>Form Version 2</h3>
-        </Row>
-
-        <Row>
           <Formik
             style={{ minWidth: "100%" }}
             validationSchema={schema}
