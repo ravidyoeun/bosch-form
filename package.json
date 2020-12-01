@@ -3,21 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@progress/kendo-data-query": "^1.5.4",
-    "@progress/kendo-drawing": "^1.9.3",
-    "@progress/kendo-licensing": "^1.1.0",
-    "@progress/kendo-react-animation": "^4.1.0",
-    "@progress/kendo-react-data-tools": "^4.1.0",
-    "@progress/kendo-react-dateinputs": "^4.1.0",
-    "@progress/kendo-react-dropdowns": "^4.1.0",
-    "@progress/kendo-react-form": "^4.1.0",
-    "@progress/kendo-react-grid": "^4.1.0",
-    "@progress/kendo-react-inputs": "^4.1.0",
-    "@progress/kendo-react-intl": "^4.1.0",
-    "@progress/kendo-theme-bootstrap": "^4.24.0",
     "babel-polyfill": "^6.26.0",
     "bootstrap": "^4.5.3",
     "core-js": "^3.7.0",
+    "email-validator": "^2.0.4",
     "formik": "^2.2.5",
     "node-sass": "^4.14.1",
     "react": "^17.0.1",
@@ -26,7 +15,8 @@
     "react-dom": "^16.9.0",
     "react-google-recaptcha": "^2.1.0",
     "react-router-dom": "^5.2.0",
-    "react-scripts": "3.1.1"
+    "react-scripts": "3.1.1",
+    "yup": "^0.31.1"
   },
   "scripts": {
     "start": "react-scripts start",

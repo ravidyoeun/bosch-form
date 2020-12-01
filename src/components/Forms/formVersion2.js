@@ -1,10 +1,5 @@
-// import "bootstrap/dist/css/bootstrap.min.css";
-
 import React, { useRef, useEffect, useState, Component } from "react";
 import * as ReactDOM from "react-dom";
-import { Form, Field, FormElement } from "@progress/kendo-react-form";
-import { Error } from "@progress/kendo-react-labels";
-import { Input } from "@progress/kendo-react-inputs";
 import {
   Navbar,
   Container,
@@ -14,6 +9,7 @@ import {
   InputGroup,
   Card,
   CardColumns,
+  Form,
 } from "react-bootstrap";
 import ReCAPTCHA from "react-google-recaptcha";
 
@@ -26,6 +22,9 @@ import {
 } from "react-router-dom";
 import Checkbox from "../Checkbox/Checkbox";
 import placeholder from "../../assets/images/download.svg";
+import { useFormik, Formik } from "formik";
+import * as yup from "yup";
+import * as EmailValidator from "email-validator";
 
 const FormVersion2 = (props) => {
   const history = useHistory();
@@ -47,6 +46,46 @@ const FormVersion2 = (props) => {
   const [termsOfUse, setTermsOfUse] = useState(false);
   const [errors, setErrors] = useState([]);
   const [validated, setValidated] = useState(false);
+
+  const schema = yup.object({
+    email: yup.string().email().required(),
+    firstName: yup.string().required(),
+    lastName: yup.string().required(),
+    zip: yup
+      .string()
+      .required()
+      .matches(/^[0-9]+$/, "Must be only digits")
+      .min(5, "Must be exactly 5 digits")
+      .max(5, "Must be exactly 5 digits"),
+    terms: yup.bool().oneOf([true], "Accept Terms & Conditions is required"),
+  });
+
+  // A custom validation function. This must return an object
+  // which keys are symmetrical to our values/initialValues
+  const validate = (values) => {
+    const errors = {};
+    if (!values.firstName) {
+      errors.firstName = "Required";
+    } else if (values.firstName.length > 15) {
+      errors.firstName = "Must be 15 characters or less";
+    }
+
+    if (!values.lastName) {
+      errors.lastName = "Required";
+    } else if (values.lastName.length > 20) {
+      errors.lastName = "Must be 20 characters or less";
+    }
+
+    if (!values.email) {
+      errors.email = "Required";
+    } else if (
+      !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)
+    ) {
+      errors.email = "Invalid email address";
+    }
+
+    return errors;
+  };
 
   const [captchaValue, setCaptchaValue] = useState("");
   const submitFormSubmission = async (event) => {
@@ -82,47 +121,47 @@ const FormVersion2 = (props) => {
       return false;
     }
   };
-  const EmailInput = (fieldRenderProps) => {
-    const { validationMessage, visited, ...others } = fieldRenderProps;
-    return (
-      <div>
-        <Input {...others} />
-        {visited && validationMessage && <Error>{validationMessage}</Error>}
-      </div>
-    );
-  };
+  // const EmailInput = (fieldRenderProps) => {
+  //   const { validationMessage, visited, ...others } = fieldRenderProps;
+  //   return (
+  //     <div>
+  //       <Input {...others} />
+  //       {visited && validationMessage && <Error>{validationMessage}</Error>}
+  //     </div>
+  //   );
+  // };
 
-  const firstNameInput = (fieldRenderProps) => {
-    const { validationMessage, visited, ...others } = fieldRenderProps;
-    return (
-      <div>
-        <Input {...others} />
-        {visited && validationMessage && <Error>{validationMessage}</Error>}
-      </div>
-    );
-  };
+  // const firstNameInput = (fieldRenderProps) => {
+  //   const { validationMessage, visited, ...others } = fieldRenderProps;
+  //   return (
+  //     <div>
+  //       <Input {...others} />
+  //       {visited && validationMessage && <Error>{validationMessage}</Error>}
+  //     </div>
+  //   );
+  // };
 
-  const lastNameInput = (fieldRenderProps) => {
-    const { validationMessage, visited, ...others } = fieldRenderProps;
-    return (
-      <div>
-        <Input {...others} />
-        {visited && validationMessage && <Error>{validationMessage}</Error>}
-      </div>
-    );
-  };
+  // const lastNameInput = (fieldRenderProps) => {
+  //   const { validationMessage, visited, ...others } = fieldRenderProps;
+  //   return (
+  //     <div>
+  //       <Input {...others} />
+  //       {visited && validationMessage && <Error>{validationMessage}</Error>}
+  //     </div>
+  //   );
+  // };
 
-  const ZipCodeInput = (fieldRenderProps) => {
-    const { validationMessage, visited, ...others } = fieldRenderProps;
-    console.log("fieldRenderProps", fieldRenderProps);
+  // const ZipCodeInput = (fieldRenderProps) => {
+  //   const { validationMessage, visited, ...others } = fieldRenderProps;
+  //   console.log("fieldRenderProps", fieldRenderProps);
 
-    return (
-      <div>
-        <Input {...others} />
-        {visited && validationMessage && <Error>{validationMessage}</Error>}
-      </div>
-    );
-  };
+  //   return (
+  //     <div>
+  //       <Input {...others} />
+  //       {visited && validationMessage && <Error>{validationMessage}</Error>}
+  //     </div>
+  //   );
+  // };
   const onCaptchaChange = (value) => {
     console.log("Captcha value:", value);
     if (value) {
@@ -172,6 +211,7 @@ const FormVersion2 = (props) => {
   };
 
   const submitData = async (payload) => {
+    console.log("payload", payload);
     const response = await fetch(
       "https://cors-anywhere.herokuapp.com/https://www.bshpersona.com/personaAPI/data/LeadAPISubmitData",
       {
@@ -300,7 +340,7 @@ const FormVersion2 = (props) => {
         firstName: dataItem.firstName,
         lastName: dataItem.lastName,
         email: dataItem.email,
-        zipCode: dataItem.zipcode,
+        zipCode: dataItem.zip,
       };
 
       await submitData(payloadObj);
@@ -323,54 +363,99 @@ const FormVersion2 = (props) => {
       <Container
         style={{ paddingTop: "60px", minHeight: "2000px", padding: "50px" }}
       >
-        <Row style={{ minWidth: "100%" }}>
-          <Form
-            style={{ minWidth: "100% !important" }}
+        <Row>
+          <h3>Form Version 2</h3>
+        </Row>
+
+        <Row>
+          <Formik
+            style={{ minWidth: "100%" }}
+            validationSchema={schema}
             onSubmit={handleSubmit}
-            render={(formRenderProps) => (
-              <FormElement horizontal={true}>
-                <fieldset className={"k-form-fieldset"}>
-                  <legend className={"k-form-legend"}>
-                    Please fill in the fields:
-                  </legend>
-                  <div className='mb-3'>
-                    <Field
-                      name={"email"}
-                      type={"email"}
-                      component={EmailInput}
-                      label={"Email *"}
-                      validator={emailValidator}
-                    />
-                  </div>
-                  <div className='mb-3'>
-                    <Field
-                      name={"firstName"}
-                      component={firstNameInput}
-                      label={"First Name *"}
-                      validator={firstNameValidator}
-                    />
-                  </div>
+            initialValues={{
+              email: "",
+              firstName: "",
+              lastName: "",
+              zip: "",
+              terms: false,
+            }}
+          >
+            {({
+              handleSubmit,
+              handleChange,
+              handleBlur,
+              values,
+              touched,
+              isValid,
+              errors,
+            }) => (
+              <Form
+                noValidate
+                onSubmit={handleSubmit}
+                style={{ minWidth: "100%" }}
+              >
+                <Form.Group controlId='Email'>
+                  <Form.Label>Email *</Form.Label>
+                  <Form.Control
+                    size='lg'
+                    type='text'
+                    name='email'
+                    value={values.email}
+                    onChange={handleChange}
+                    isInvalid={!!errors.email}
+                  />
 
-                  <div className='mb-3'>
-                    <Field
-                      name={"lastName"}
-                      component={lastNameInput}
-                      label={"Last Name *"}
-                      validator={lastNameValidator}
-                    />
-                  </div>
+                  <Form.Control.Feedback type='invalid'>
+                    Please enter a valid email.
+                  </Form.Control.Feedback>
+                </Form.Group>
+                <Form.Group controlId='firstName'>
+                  <Form.Label>First Name *</Form.Label>
+                  <Form.Control
+                    size='lg'
+                    type='text'
+                    name='firstName'
+                    value={values.firstName}
+                    onChange={handleChange}
+                    isInvalid={!!errors.firstName}
+                  />
 
-                  <div className='mb-3'>
-                    <Field
-                      name={"zipcode"}
-                      type={"zipcode"}
-                      component={ZipCodeInput}
-                      label={"Zip Code (5 digits) *"}
-                      validator={zipCodeValidator}
-                    />
-                  </div>
-                </fieldset>
-                <br />
+                  <Form.Control.Feedback type='invalid'>
+                    Please provide your first name.
+                  </Form.Control.Feedback>
+                </Form.Group>
+                <Form.Group controlId='lastName'>
+                  <Form.Label>Last Name *</Form.Label>
+                  <Form.Control
+                    size='lg'
+                    type='text'
+                    name='lastName'
+                    value={values.lastName}
+                    onChange={handleChange}
+                    isInvalid={!!errors.lastName}
+                  />
+
+                  <Form.Control.Feedback type='invalid'>
+                    Please provide your last name.
+                  </Form.Control.Feedback>
+                </Form.Group>
+
+                <Form.Group controlId='zipCode'>
+                  <Form.Label>Zip Code (5 digits) *</Form.Label>
+                  <Form.Control
+                    size='lg'
+                    type='text'
+                    name='zip'
+                    value={values.zip}
+                    onChange={handleChange}
+                    isInvalid={!!errors.zip}
+                  />
+
+                  <Form.Control.Feedback type='invalid'>
+                    Please provide a valid US zip code that is 5 digits long.
+                  </Form.Control.Feedback>
+                </Form.Group>
+
                 <p>
                   Select your favorite kitchen suite(s) below to access your
                   downloadable copy: *
@@ -485,259 +570,75 @@ const FormVersion2 = (props) => {
                     </Card>
                   </a>
                 </CardColumns>
-                <br />
+                <br></br>
                 <ReCAPTCHA
                   sitekey='6LcbROQZAAAAAItQ23coy43o0mkrIHY3NjcX39L2'
                   onChange={onCaptchaChange}
                 />
                 <br />
-                <div className='k-form-buttons'>
-                  <button
-                    primary={true}
-                    type={"submit"}
-                    disabled={!formRenderProps.allowSubmit}
-                    className='k-button'
-                  >
-                    <ShowLoadText></ShowLoadText>
-                  </button>
-                </div>
-              </FormElement>
+
+                <Form.Group controlId='AgreeToTerms'>
+                  <Form.Check
+                    required
+                    name='terms'
+                    onChange={handleChange}
+                    isInvalid={!!errors.terms}
+                    feedback={errors.terms}
+                    id='validationFormik0'
+                    label={
+                      <div>
+                        I have read the{" "}
+                        <a
+                          href='https://bosch-home.com/us/about/imprint/legal'
+                          target='_blank'
+                          style={{
+                            color: "rgb(" + 0 + "," + 123 + "," + 255 + ")",
+                            backgroundColor:
+                              "rgb(" + 255 + "," + 255 + "," + 255 + ")",
+                            fontWeight: "600",
+                          }}
+                        >
+                          Terms of Use
+                        </a>{" "}
+                        and{" "}
+                        <a
+                          href='https://bosch-home.com/us/about/imprint/privacypolicy'
+                          target='_blank'
+                          style={{
+                            color: "rgb(" + 0 + "," + 123 + "," + 255 + ")",
+                            backgroundColor:
+                              "rgb(" + 255 + "," + 255 + "," + 255 + ")",
+                            fontWeight: "600",
+                          }}
+                        >
+                          Privacy Policy
+                        </a>{" "}
+                        of BSH Home Appliances Corporation - Bosch, 1901 Main
+                        Street, Suite 600, Irvine, CA 92614. I understand and
+                        accept them.
+                      </div>
+                    }
+                    size='lg'
+                  />
+
+                  {/* <Form.Control.Feedback type='invalid'>
+                    Please agree to Terms of Use.
+                  </Form.Control.Feedback> */}
+                </Form.Group>
+                <br></br>
+
+                <Button
+                  variant='primary'
+                  type='submit'
+                  className='float-left'
+                  size='lg'
+                  type='submit'
+                >
+                  <ShowLoadText></ShowLoadText>
+                </Button>
+              </Form>
             )}
-          />
-        </Row>
-      </Container>
-    </>
-  );
-
-  return (
-    <>
-      <Container
-        style={{ paddingTop: "60px", minHeight: "2000px", padding: "50px" }}
-      >
-        <Row>
-          <h3>Form Version 2</h3>
-        </Row>
-
-        <Row>
-          <Form
-            noValidate
-            validated={validated}
-            onSubmit={handleSubmit}
-            style={{ minWidth: "100%" }}
-          >
-            <Form.Group controlId='Email'>
-              <Form.Label>Email address *</Form.Label>
-              <Form.Control
-                required
-                type='email'
-                size='lg'
-                onChange={emailChange}
-                value={emailValue}
-              />
-              <Form.Control.Feedback type='invalid'>
-                Please provide a valid email address.
-              </Form.Control.Feedback>
-            </Form.Group>
-
-            <Form.Group controlId='FirstName'>
-              <Form.Label>First Name *</Form.Label>
-              <Form.Control
-                type='text'
-                size='lg'
-                required
-                onChange={firstNameChange}
-                value={firstname}
-              />
-              <Form.Control.Feedback type='invalid'>
-                Please provide your first name.
-              </Form.Control.Feedback>
-            </Form.Group>
-            <Form.Group controlId='LastName'>
-              <Form.Label>Last Name *</Form.Label>
-              <Form.Control
-                type='text'
-                size='lg'
-                required
-                onChange={lastNameChange}
-                value={lastname}
-              />
-              <Form.Control.Feedback type='invalid'>
-                Please provide your last name.
-              </Form.Control.Feedback>
-            </Form.Group>
-
-            <Form.Group controlId='ZipCOde'>
-              <Form.Label>Zip Code (5 digits) *</Form.Label>
-              <Form.Control
-                type='number'
-                size='lg'
-                required
-                onChange={zipChange}
-                value={zipcode}
-                isInvalid={zipcode.length != 5}
-                isValid={false}
-              />
-              <Form.Control.Feedback type='invalid'>
-                Please provide a valid US zip code that is 5 digits long.
-              </Form.Control.Feedback>
-            </Form.Group>
-            <p>
-              Select your favorite kitchen suite(s) below to access your
-              downloadable copy: *
-            </p>
-            <CardColumns>
-              <a style={{ cursor: "pointer" }} onClick={() => selectCard(1)}>
-                <Card
-                  bg='secondary'
-                  text='white'
-                  className={`${
-                    !boxOneSelect
-                      ? "highlightSelection text-center p-3"
-                      : "text-center p-3"
-                  }`}
-                >
-                  <blockquote className='blockquote mb-0 card-body'>
-                    <p>Kitchen Suite 1</p>
-                  </blockquote>
-                </Card>
-              </a>
-              <a style={{ cursor: "pointer" }} onClick={() => selectCard(2)}>
-                <Card
-                  bg='secondary'
-                  text='white'
-                  className={`${
-                    !boxTwoSelect
-                      ? "highlightSelection text-center p-3"
-                      : "text-center p-3"
-                  }`}
-                >
-                  <blockquote className='blockquote mb-0 card-body'>
-                    <p>Kitchen Suite 2</p>
-                  </blockquote>
-                </Card>
-              </a>
-              <a style={{ cursor: "pointer" }} onClick={() => selectCard(3)}>
-                <Card
-                  bg='secondary'
-                  text='white'
-                  className={`${
-                    !boxThreeSelect
-                      ? "highlightSelection text-center p-3"
-                      : "text-center p-3"
-                  }`}
-                >
-                  <blockquote className='blockquote mb-0 card-body'>
-                    <p>Kitchen Suite 3</p>
-                  </blockquote>
-                </Card>
-              </a>
-              <a style={{ cursor: "pointer" }} onClick={() => selectCard(4)}>
-                <Card
-                  bg='secondary'
-                  text='white'
-                  className={`${
-                    !boxFourSelect
-                      ? "highlightSelection text-center p-3"
-                      : "text-center p-3"
-                  }`}
-                >
-                  <blockquote className='blockquote mb-0 card-body'>
-                    <p>Kitchen Suite 4</p>
-                  </blockquote>
-                </Card>
-              </a>
-              <a style={{ cursor: "pointer" }} onClick={() => selectCard(5)}>
-                <Card
-                  bg='secondary'
-                  text='white'
-                  className={`${
-                    !boxFiveSelect
-                      ? "highlightSelection text-center p-3"
-                      : "text-center p-3"
-                  }`}
-                >
-                  <blockquote className='blockquote mb-0 card-body'>
-                    <p>Kitchen Suite 5</p>
-                  </blockquote>
-                </Card>
-              </a>
-              <a style={{ cursor: "pointer" }} onClick={() => selectCard(6)}>
-                <Card
-                  bg='secondary'
-                  text='white'
-                  className={`${
-                    !boxSixSelect
-                      ? "highlightSelection text-center p-3"
-                      : "text-center p-3"
-                  }`}
-                >
-                  <blockquote className='blockquote mb-0 card-body'>
-                    <p>Kitchen Suite 6</p>
-                  </blockquote>
-                </Card>
-              </a>
-            </CardColumns>
-            <br></br>
-            <ReCAPTCHA
-              sitekey='6LcbROQZAAAAAItQ23coy43o0mkrIHY3NjcX39L2'
-              onChange={onCaptchaChange}
-            />
-            <br />
-            <Form.Group controlId='AgreeToTerms'>
-              <Form.Check
-                type='checkbox'
-                label={
-                  <div>
-                    I have read the{" "}
-                    <a
-                      href='https://bosch-home.com/us/about/imprint/legal'
-                      target='_blank'
-                      style={{
-                        color: "rgb(" + 0 + "," + 123 + "," + 255 + ")",
-                        backgroundColor:
-                          "rgb(" + 255 + "," + 255 + "," + 255 + ")",
-                        fontWeight: "600",
-                      }}
-                    >
-                      Terms of Use
-                    </a>{" "}
-                    and{" "}
-                    <a
-                      href='https://bosch-home.com/us/about/imprint/privacypolicy'
-                      target='_blank'
-                      style={{
-                        color: "rgb(" + 0 + "," + 123 + "," + 255 + ")",
-                        backgroundColor:
-                          "rgb(" + 255 + "," + 255 + "," + 255 + ")",
-                        fontWeight: "600",
-                      }}
-                    >
-                      Privacy Policy
-                    </a>{" "}
-                    of BSH Home Appliances Corporation - Bosch, 1901 Main
-                    Street, Suite 600, Irvine, CA 92614. I understand and accept
-                    them.
-                  </div>
-                }
-                size='lg'
-                required
-                onChange={termsofUseChange}
-                checked={termsOfUse}
-              />
-              <Form.Control.Feedback type='invalid'>
-                Please agree to Terms of Use.
-              </Form.Control.Feedback>
-            </Form.Group>
-            <br></br>
-            <Button
-              variant='primary'
-              type='submit'
-              className='float-left'
-              size='lg'
-            >
-              Submit
-            </Button>
-          </Form>
+          </Formik>
         </Row>
       </Container>
     </>
