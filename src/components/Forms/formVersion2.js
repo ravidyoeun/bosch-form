@@ -42,11 +42,11 @@ const FormVersion2 = (props) => {
   const [isLoading, setIsLoading] = useState(false);
   const [downloadLinks, setDownloadLinks] = useState([]);
   const [zipcode, setZipcode] = useState("");
-
+  const [downloadLinksError, setDownloadLinksError] = useState(false);
   const [termsOfUse, setTermsOfUse] = useState(false);
   const [errors, setErrors] = useState([]);
   const [validated, setValidated] = useState(false);
-
+  const [incorrectCaptcha, setIncorrectCaptcha] = useState(false);
   const schema = yup.object({
     email: yup.string().email().required(),
     firstName: yup.string().required(),
@@ -57,12 +57,21 @@ const FormVersion2 = (props) => {
       .matches(/^[0-9]+$/, "Must be only digits")
       .min(5, "Must be exactly 5 digits")
       .max(5, "Must be exactly 5 digits"),
-    terms: yup.bool().oneOf([true], "Accept Terms & Conditions is required"),
+    terms: yup.bool().oneOf([true], "Please accept terms"),
   });
 
   // A custom validation function. This must return an object
   // which keys are symmetrical to our values/initialValues
   const validate = (values) => {
+    console.log("values", values);
+    if (downloadLinks.length < 1) {
+      setDownloadLinksError(true);
+    }
+
+    if (!captchaValue) {
+      setIncorrectCaptcha(true);
+    }
+
     const errors = {};
     if (!values.firstName) {
       errors.firstName = "Required";
@@ -121,51 +130,12 @@ const FormVersion2 = (props) => {
       return false;
     }
   };
-  // const EmailInput = (fieldRenderProps) => {
-  //   const { validationMessage, visited, ...others } = fieldRenderProps;
-  //   return (
-  //     <div>
-  //       <Input {...others} />
-  //       {visited && validationMessage && <Error>{validationMessage}</Error>}
-  //     </div>
-  //   );
-  // };
 
-  // const firstNameInput = (fieldRenderProps) => {
-  //   const { validationMessage, visited, ...others } = fieldRenderProps;
-  //   return (
-  //     <div>
-  //       <Input {...others} />
-  //       {visited && validationMessage && <Error>{validationMessage}</Error>}
-  //     </div>
-  //   );
-  // };
-
-  // const lastNameInput = (fieldRenderProps) => {
-  //   const { validationMessage, visited, ...others } = fieldRenderProps;
-  //   return (
-  //     <div>
-  //       <Input {...others} />
-  //       {visited && validationMessage && <Error>{validationMessage}</Error>}
-  //     </div>
-  //   );
-  // };
-
-  // const ZipCodeInput = (fieldRenderProps) => {
-  //   const { validationMessage, visited, ...others } = fieldRenderProps;
-  //   console.log("fieldRenderProps", fieldRenderProps);
-
-  //   return (
-  //     <div>
-  //       <Input {...others} />
-  //       {visited && validationMessage && <Error>{validationMessage}</Error>}
-  //     </div>
-  //   );
-  // };
   const onCaptchaChange = (value) => {
     console.log("Captcha value:", value);
     if (value) {
       setCaptchaValue(value);
+      setIncorrectCaptcha(false);
     } else {
       setCaptchaValue("");
     }
@@ -292,6 +262,10 @@ const FormVersion2 = (props) => {
         removeItem(6);
       }
     }
+
+    if (downloadLinks.length < 1) {
+      setDownloadLinksError(false);
+    }
     console.log("downloadLinks", downloadLinks);
     // setDownloadLinks(downloadLinkObj);
   };
@@ -305,32 +279,9 @@ const FormVersion2 = (props) => {
     }
   };
 
-  // const handleSubmit = async (event) => {
-  //   event.preventDefault();
-  //   const form = event.currentTarget;
-
-  //   if (form.checkValidity() === false) {
-  //     event.preventDefault();
-  //     event.stopPropagation();
-  //   } else {
-  //     if (captchaValue) {
-  //       event.preventDefault();
-  //       var payloadObj = {
-  //         promoIDExt: "10A129D3-F78B-4E1B-9C21-B65353B9E456",
-  //         firstName: firstname,
-  //         lastName: lastname,
-  //         email: emailValue,
-  //         zipCode: zipcode,
-  //       };
-
-  //       console.log("payloadObj", payloadObj);
-  //       await submitData(payloadObj);
-  //     } else {
-  //       alert("Security captcha is incorrect!");
-  //     }
-  //   }
-  //   setValidated(true);
-  // };
+  const handleChange = async () => {
+    console.log("handlechange test");
+  };
   const handleSubmit = async (dataItem) => {
     console.log("dataItem", dataItem);
     if (captchaValue) {
@@ -345,7 +296,7 @@ const FormVersion2 = (props) => {
 
       await submitData(payloadObj);
     } else {
-      alert("Security captcha is incorrect!");
+      setIncorrectCaptcha(true);
     }
 
     setIsLoading(false);
@@ -358,6 +309,7 @@ const FormVersion2 = (props) => {
       return "Submit";
     }
   };
+
   return (
     <>
       <Container
@@ -366,6 +318,7 @@ const FormVersion2 = (props) => {
         <Row>
           <Formik
             style={{ minWidth: "100%" }}
+            validate={validate}
             validationSchema={schema}
             onSubmit={handleSubmit}
             initialValues={{
@@ -405,6 +358,7 @@ const FormVersion2 = (props) => {
                     Please enter a valid email.
                   </Form.Control.Feedback>
                 </Form.Group>
+
                 <Form.Group controlId='firstName'>
                   <Form.Label>First Name *</Form.Label>
                   <Form.Control
@@ -435,7 +389,6 @@ const FormVersion2 = (props) => {
                     Please provide your last name.
                   </Form.Control.Feedback>
                 </Form.Group>
-
                 <Form.Group controlId='zipCode'>
                   <Form.Label>Zip Code (5 digits) *</Form.Label>
                   <Form.Control
@@ -451,11 +404,16 @@ const FormVersion2 = (props) => {
                     Please provide a valid US zip code that is 5 digits long.
                   </Form.Control.Feedback>
                 </Form.Group>
-
                 <p>
                   Select your favorite kitchen suite(s) below to access your
                   downloadable copy: *
                 </p>
+                {downloadLinksError ? (
+                  <p className='errorMessage'>
+                    Please select kitchen suite(s).
+                  </p>
+                ) : null}
+
                 <CardColumns>
                   <a
                     style={{ cursor: "pointer" }}
@@ -567,12 +525,16 @@ const FormVersion2 = (props) => {
                   </a>
                 </CardColumns>
                 <br></br>
-                <ReCAPTCHA
-                  sitekey='6LcbROQZAAAAAItQ23coy43o0mkrIHY3NjcX39L2'
-                  onChange={onCaptchaChange}
-                />
+                <div className={`${incorrectCaptcha ? "captchaError" : ""}`}>
+                  <ReCAPTCHA
+                    sitekey='6LcbROQZAAAAAItQ23coy43o0mkrIHY3NjcX39L2'
+                    onChange={onCaptchaChange}
+                  />
+                </div>
+                {incorrectCaptcha ? (
+                  <p className='errorMessage'>Please complete the captcha.</p>
+                ) : null}
                 <br />
-
                 <Form.Group controlId='AgreeToTerms'>
                   <Form.Check
                     required
@@ -622,7 +584,6 @@ const FormVersion2 = (props) => {
                   </Form.Control.Feedback> */}
                 </Form.Group>
                 <br></br>
-
                 <Button
                   variant='primary'
                   type='submit'

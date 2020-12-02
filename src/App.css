@@ -80,3 +80,16 @@
 .btn {
   background-color: #00639a;
 }
+
+.errorMessage {
+  margin-top: 0.25rem;
+  width: 100%;
+  font-size: 80%;
+  color: #dc3545;
+}
+
+.captchaError {
+  border-style: solid;
+  border-color: red;
+  width: 308px;
+}
