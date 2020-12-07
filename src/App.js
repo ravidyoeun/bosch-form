@@ -11,7 +11,7 @@ import FormVersion2 from "./components/Forms/formVersion2";
 import SuccessPage from "./components/Success/success";
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 import Confirmation from "./components/Confirmation/Confirmation";
-
+import Survey from "./components/Survey/Survey";
 const App = (props) => {
   const [emailValue, setEmailValue] = useState("");
   const [confirmEmail, setConfirmEmailValue] = useState("");
@@ -238,6 +238,9 @@ const App = (props) => {
             <Route path='/form2'>
               <Form2 />
             </Route>
+            <Route path='/survey'>
+              <Survey />
+            </Route>
             <Route path='/success'>
               <Success />
             </Route>
@@ -245,7 +248,7 @@ const App = (props) => {
               <Confirmation />
             </Route>
             <Route path='/'>
-              <NewsLetterSignup></NewsLetterSignup>
+             <Form2 />
             </Route>
           </Switch>
         </div>
