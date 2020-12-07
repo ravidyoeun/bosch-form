@@ -10,6 +10,7 @@ import {
   Card,
   CardColumns,
   Form,
+  Alert,
 } from "react-bootstrap";
 import ReCAPTCHA from "react-google-recaptcha";
 
@@ -47,6 +48,7 @@ const FormVersion2 = (props) => {
   const [errors, setErrors] = useState([]);
   const [validated, setValidated] = useState(false);
   const [incorrectCaptcha, setIncorrectCaptcha] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
   const schema = yup.object({
     email: yup.string().email().required(),
     firstName: yup.string().required(),
@@ -208,8 +210,11 @@ const FormVersion2 = (props) => {
 
         (error) => {
           console.log("errr", error);
+
+          setErrorMessage(error.toString());
         }
-      );
+      )
+      .catch((error1) => console.log("error1", error1));
   };
 
   const selectCard = (param) => {
@@ -316,6 +321,12 @@ const FormVersion2 = (props) => {
         style={{ paddingTop: "60px", minHeight: "2000px", padding: "50px" }}
       >
         <Row>
+          {errorMessage ? (
+            <Alert style={{ minWidth: "100%" }} variant='danger'>
+              {errorMessage}
+            </Alert>
+          ) : null}
+
           <Formik
             style={{ minWidth: "100%" }}
             validate={validate}
