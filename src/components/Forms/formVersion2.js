@@ -200,11 +200,14 @@ const FormVersion2 = (props) => {
           if (result) {
             console.log("result returned", result);
             //redirect
-
-            history.push({
-              pathname: "/confirmation",
-              state: { links: downloadLinks },
-            });
+            if (result.error === 400 && result.Success === "False") {
+              setErrorMessage(result.Message.toString());
+            } else {
+              history.push({
+                pathname: "/confirmation",
+                state: { links: downloadLinks },
+              });
+            }
           }
         },
 
